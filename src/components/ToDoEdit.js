@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import './ToDoEdit.scss';
 
-function ToDoEdit({ selectedTodo, onUpdate }) {
+function ToDoEdit({ insertToggle, selectedTodo, onUpdate }) {
   const [value, setValue] = useState('');
   const onChange = useCallback((e) => {
     setValue(e.target.value);

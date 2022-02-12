@@ -3,72 +3,68 @@ import ToDoEdit from './components/ToDoEdit';
 import ToDoInsert from './components/ToDoInsert';
 import TodoList from './components/TodoList';
 import TodoTemplate from './components/ToDoTemplate';
-function App() {
-  const [todos, setTodos] = useState([
-    {
-      id: 1,
-      text: '리액트 기초 알아보기',
-      checked: true,
-    },
-    {
-      id: 2,
-      text: '컴포넌트 스타일링 하기',
-      checked: true,
-    },
-    {
-      id: 3,
-      text: '투두리스트 만들기',
+
+function createBulkTodos() {
+  const array = [];
+  for (let i = 1; i <= 2500; i++) {
+    array.push({
+      id: i,
+      text: `할일 ${i}`,
       checked: false,
-    },
-  ]);
+    });
+  }
+  return array;
+}
+
+
+
+function App() {
+  const [todos, setTodos] = useState(createBulkTodos);
   const [selectedTodo, setSelectedTodo] = useState(null);
   const [insertToggle, setInsertToggle] = useState(false);
 
   const nextId = useRef(4);
-  const onInsertToggle = () => {
+  const onInsertToggle = useCallback(() => {
     if (selectedTodo) {
-      setSelectedTodo(null);
+      setSelectedTodo((selectedTodo) => null);
     }
     setInsertToggle((prev) => !prev);
-  };
+  }, [selectedTodo]);
 
   const onChangeSelectedTodo = (todo) => {
-    setSelectedTodo(todo);
+    setSelectedTodo((selectedTodo) => todo);
   };
 
-  const onInsert = useCallback(
-    (text) => {
-      const todo = {
-        id: nextId.current,
-        text,
-        checked: false,
-      };
-      setTodos(todos.concat(todo)); //concat(): 인자로 주어진 배열이나 값들을 기존 배열에 합쳐서 새 배열 반환
-      nextId.current++; //nextId 1씩 더하기
-    },
-    [todos],
-  );
+  const onInsert = useCallback((text) => {
+    const todo = {
+      id: nextId.current,
+      text,
+      checked: false,
+    };
+    setTodos((todos) => todos.concat(todo)); //concat(): 인자로 주어진 배열이나 값들을 기존 배열에 합쳐서 새 배열 반환
+    nextId.current++; //nextId 1씩 더하기
+  }, []);
 
-  const onRemove = useCallback(
-    (id) => {
-      setTodos(todos.filter((todo) => todo.id !== id));
-    },
-    [todos],
-  );
-  const onUpdate = (id, text) => {
-    onInsertToggle();
-    setTodos(todos.map((todo) => (todo.id === id ? { ...todo, text } : todo)));
-  };
-  const onToggle = useCallback(
-    (id) => {
-      setTodos(
-        todos.map((todo) =>
-          todo.id === id ? { ...todo, checked: !todo.checked } : todo,
-        ),
+  const onRemove = useCallback((id) => {
+    setTodos((todos) => todos.filter((todo) => todo.id !== id));
+  }, []);
+  const onUpdate = useCallback(
+    (id, text) => {
+      onInsertToggle();
+
+      setTodos((todos) =>
+        todos.map((todo) => (todo.id === id ? { ...todo, text } : todo)),
       );
     },
-    [todos],
+    [onInsertToggle],
   );
+  const onToggle = useCallback((id) => {
+    setTodos((todos) =>
+      todos.map((todo) =>
+        todo.id === id ? { ...todo, checked: !todo.checked } : todo,
+      ),
+    );
+  }, []);
   return (
     <TodoTemplate>
       <ToDoInsert onInsert={onInsert} />
@@ -85,6 +81,7 @@ function App() {
           selectedTodo={selectedTodo}
           onInsertToggle={onInsertToggle}
           onUpdate={onUpdate}
+          insertToggle={insertToggle}
         />
       )}
     </TodoTemplate>
