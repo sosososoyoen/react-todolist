@@ -7,6 +7,7 @@
 ## 프로젝트에 사용한 기술
 ### React
 * useState, useRef, useCallback 등의 리액트 훅을 사용함
+* React.memo, react-virtualized를 사용하여 렌더링 최적화
 ### SCSS
 * nesting(중첩)을 이용해 최적화된 스타일 작성
 
