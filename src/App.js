@@ -4,22 +4,24 @@ import ToDoInsert from './components/ToDoInsert';
 import TodoList from './components/TodoList';
 import TodoTemplate from './components/ToDoTemplate';
 
-function createBulkTodos() {
-  const array = [];
-  for (let i = 1; i <= 2500; i++) {
-    array.push({
-      id: i,
-      text: `할일 ${i}`,
-      checked: false,
-    });
-  }
-  return array;
-}
-
-
-
 function App() {
-  const [todos, setTodos] = useState(createBulkTodos);
+  const [todos, setTodos] = useState([
+    {
+      id: 1,
+      text: '리액트 기초 알아보기',
+      checked: true,
+    },
+    {
+      id: 2,
+      text: '컴포넌트 스타일링 하기',
+      checked: true,
+    },
+    {
+      id: 3,
+      text: '투두리스트 만들기',
+      checked: false,
+    },
+  ]);
   const [selectedTodo, setSelectedTodo] = useState(null);
   const [insertToggle, setInsertToggle] = useState(false);
 
